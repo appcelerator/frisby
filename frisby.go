@@ -214,6 +214,21 @@ func (F *Frisby) AddFile(filename string) *Frisby {
 }
 
 // Add a file to the Form data for the coming request
+func (F *Frisby) AddFileWithKey(key string, filename string) *Frisby {
+	file, err := os.Open(filename)
+	if err != nil {
+		F.Errs = append(F.Errs, err)
+	} else {
+		fileField := request.FileField{
+			FieldName: key,
+			FileName:  filepath.Base(filename),
+			File:      file}
+		F.Req.Files = append(F.Req.Files, fileField)
+	}
+	return F
+}
+
+// Add a file to the Form data for the coming request
 func (F *Frisby) AddFileByKey(key, filename string) *Frisby {
 	file, err := os.Open(filename)
 	if err != nil {
